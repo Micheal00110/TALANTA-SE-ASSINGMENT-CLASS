@@ -1,0 +1,166 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fff;
+    color: #231942;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 2rem 0 0;
+    justify-content: flex-start;
+    font-size: 1.1rem;
+}
+.navbar a {
+    color: #5f27cd;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.navbar a:hover {
+    color: #341f97;
+}
+
+.hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 3rem 3rem 2rem 3rem;
+    min-height: 320px;
+    gap: 2rem;
+}
+.hero-text {
+    max-width: 600px;
+}
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.hero p {
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
+}
+.resume-link {
+    color: #5f27cd;
+    text-decoration: underline;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.hero-img img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 2px solid #bdbdbd;
+    object-fit: cover;
+    margin-top: 1.5rem;
+    padding: 5px;
+    background-color: #fff;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2.5rem 3rem 1rem 3rem;
+}
+.section-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+.view-all {
+    color: #5f27cd;
+    text-decoration: underline;
+    font-size: 1.05rem;
+}
+
+.recent-posts {
+    margin-bottom: 3rem;
+}
+.posts-grid {
+    display: flex;
+    gap: 2rem;
+    margin: 0 3rem;
+}
+.post-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    flex: 1;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+    transition: box-shadow 0.2s;
+}
+.post-card:hover {
+    box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+}
+.post-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+}
+.post-meta {
+    color: #636e72;
+    font-size: 0.98rem;
+    margin-bottom: 1rem;
+}
+.post-card p {
+    font-size: 1.05rem;
+    color: #231942;
+}
+
+@media (max-width: 900px) {
+    .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2rem 1rem 1rem 1rem;
+    }
+    .section-header, .posts-grid {
+        margin: 0 1rem;
+    }
+    .posts-grid {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+.bio {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 2rem 0;
+    border-left: 5px solid #74b9ff;
+}
+
+.skills {
+    background: #ffffff;
+    padding: 1.5rem;
+    border: 2px dashed #a29bfe;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.skills ul {
+    columns: 2;
+    list-style-type: square;
+    color: #6c5ce7;
+}
+
+#quote {
+    background: #ffeaa7;
+    padding: 1rem;
+    border-radius: 5px;
+    border: 3px solid #fdcb6e;
+    font-style: italic;
+    text-align: center;
+}
+
+blockquote {
+    font-weight: 600;
+    color: #d63031;
+    margin: 1rem 0;
+}
