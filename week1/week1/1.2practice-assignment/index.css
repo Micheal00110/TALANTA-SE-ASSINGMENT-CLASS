@@ -1,0 +1,29 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f0f8ff;
+  color: #333;
+}
+
+h1 {
+  color: #0066cc;
+}
+
+img {
+  width: 300px;
+  height: auto;
+  margin: 15px 0;
+}
+
+a {
+  color: #cc0000;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul, ol {
+  margin-left: 20px;
+}
