@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form name="selectForm">
+        <label for="musicTypes">choose some music type, then click the button below </label>
+        <select name="musicTypes" id="musicTypes" multiple>
+            <option value="pop">Pop</option>
+            <option value="rock">Rock</option>
+            <option value="jazz">Jazz</option>
+            <option value="classical">Classical</option>
+        </select>
+        <button type="button" id="btn">How many are Selected</button>
+    </form>
+
+    <script>
+        function countSelected(selectObject) {
+            let numberSelected = 0;
+            for (let i = 0; i < selectObject.options.length; i++) {
+                if (selectObject.options[i].selected) {
+                    numberSelected++;
+                }
+            }
+            return numberSelected;
+        }
+
+        const btn = document.getElementById("btn");
+
+        btn.addEventListener("click", () => {
+            const musicTypes = document.selectForm.musicTypes;
+            alert(`You have selected ${countSelected(musicTypes)} option(s).`);
+        });
+    </script>
+</body>
+</html>
