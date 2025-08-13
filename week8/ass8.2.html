@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile Card</title>
+  <style>
+    body{font-family:sans-serif;background:#f5f5f5;padding:2rem}
+    .card{background:#fff;border-radius:8px;padding:1.5rem;max-width:250px;text-align:center}
+    .profile-pic{width:100px;height:100px;border-radius:50%;object-fit:cover}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2 id="name">MKDIR</h2>
+  <p id="bio">Short bio here.</p>
+  <img class="profile-pic" src="https://via.placeholder.com/100" alt="profile">
+  <input id="userInput" placeholder="type something" />
+  <button id="logBtn">Log Input</button>
+</div>
+
+<script>
+  document.getElementById('name').textContent   = 'Mike Smith';
+  document.getElementById('bio').textContent    = 'developer & designer.';
+  document.querySelector('.profile-pic').src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=60';
+  document.getElementById('logBtn').addEventListener('click', () => {
+    const val = document.getElementById('userInput').value.trim();
+    console.log(val || '(empty)');
+  });
+</script>
+
+</body>
+</html>

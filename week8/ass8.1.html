@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Quick Page</title>
+</head>
+<body>
+
+<h1 id="heading">Original Heading</h1>
+<p id="p1">First paragraph text.</p>
+<p>Second paragraph text.</p>
+
+<img id="myPic" src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=150&q=60" alt="demo">
+
+<script>
+  document.getElementById('heading').textContent = 'New Heading';
+  console.log(document.getElementById('p1').textContent);
+  document.getElementById('myPic').src = 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=300&q=60';
+</script>
+
+</body>
+</html>

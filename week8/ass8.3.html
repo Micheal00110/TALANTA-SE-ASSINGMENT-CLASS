@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dynamic FAQ</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; }
+    .faq p { margin: .5rem 0; }
+    .del  { margin-left: .5rem; color: #fff; background: crimson; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<input id="questionInput" placeholder="Type your question">
+<button id="addBtn">Add Question</button>
+
+<div class="faq" id="faqList"></div>
+
+<script>
+  const input = document.getElementById('questionInput');
+  const addBtn = document.getElementById('addBtn');
+  const faqList = document.getElementById('faqList');
+
+  addBtn.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (!text) return;
+
+    const p = document.createElement('p');
+    p.textContent = text;
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete';
+    delBtn.className = 'del';
+    delBtn.addEventListener('click', () => p.remove());
+
+    p.appendChild(delBtn);
+    faqList.appendChild(p);
+    input.value = '';
+    input.focus();
+  });
+</script>
+
+</body>
+</html>
