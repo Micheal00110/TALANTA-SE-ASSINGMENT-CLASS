@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Decor Color Picker</title>
+</head>
+<body>
+  <h1>Customize Your Decor</h1>
+
+  <label for="colorPicker">Choose a color:</label>
+  <input type="color" id="colorPicker">
+
+  <button id="applyBtn">Apply Background</button>
+
+  <div class="preview-box" style="width:200px;height:200px;border:1px solid #000;"></div>
+
+  <p class="hover-text">Hover over me for a surprise!</p>
+
+  <img id="decorImage" src="https://source.unsplash.com/400x300/?interior" alt="Decor preview">
+  <button id="hideBtn">Hide Image</button>
+
+  <script>
+    const colorPicker = document.getElementById('colorPicker');
+    const applyBtn = document.getElementById('applyBtn');
+    const previewBox = document.querySelector('.preview-box');
+    const hoverText = document.querySelector('.hover-text');
+    const decorImage = document.getElementById('decorImage');
+    const hideBtn = document.getElementById('hideBtn');
+
+    applyBtn.addEventListener('click', () => {
+      previewBox.style.backgroundColor = colorPicker.value;
+    });
+
+    colorPicker.addEventListener('input', () => {
+      console.log('Selected color:', colorPicker.value);
+    });
+
+    hoverText.addEventListener('mouseover', () => {
+      hoverText.textContent = '🎉 Surprise! You hovered!';
+    });
+
+    hoverText.addEventListener('mouseout', () => {
+      hoverText.textContent = 'Hover over me for a surprise!';
+    });
+
+    hideBtn.addEventListener('click', () => {
+      const isHidden = decorImage.style.display === 'none';
+      decorImage.style.display = isHidden ? 'block' : 'none';
+      hideBtn.textContent = isHidden ? 'Hide Image' : 'Show Image';
+    });
+  </script>
+</body>
+</html>

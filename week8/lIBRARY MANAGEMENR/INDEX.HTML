@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Library System</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button, select { display: block; margin: 10px 0; }
+        .hidden { display: none; }
+        .book { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <!-- Login/Register -->
+    <div id="auth-section">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <hr>
+        <h2>Register</h2>
+        <input type="text" id="register-username" placeholder="Username">
+        <input type="password" id="register-password" placeholder="Password">
+        <select id="register-role">
+            <option value="user">User</option>
+            <option value="librarian">Librarian</option>
+        </select>
+        <button onclick="register()">Register</button>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="user-dashboard" class="hidden">
+        <h2>Welcome, <span id="user-name"></span>!</h2>
+        <h3>Available Books</h3>
+        <div id="user-book-list"></div>
+        <h3>Your Borrowed Books</h3>
+        <div id="user-borrowed-list"></div>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Librarian Dashboard -->
+    <div id="librarian-dashboard" class="hidden">
+        <h2>Welcome, Librarian <span id="librarian-name"></span>!</h2>
+        <button onclick="showAddBookForm()">Add Book</button>
+        <button onclick="showEditBookForm()">Edit Book</button>
+        <button onclick="deleteBook()">Delete Book</button>
+        <h3>All Books</h3>
+        <div id="librarian-book-list"></div>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Add Book Form -->
+    <div id="add-book-form" class="hidden">
+        <h2>Add Book</h2>
+        <input type="text" id="book-title" placeholder="Title">
+        <input type="text" id="book-author" placeholder="Author">
+        <input type="number" id="book-total-count" placeholder="Total Count">
+        <button onclick="addBook()">Add</button>
+        <button onclick="hideForms()">Cancel</button>
+    </div>
+
+    <!-- Edit Book Form -->
+    <div id="edit-book-form" class="hidden">
+        <h2>Edit Book</h2>
+        <input type="number" id="edit-book-id" placeholder="Book ID">
+        <input type="text" id="edit-book-title" placeholder="Title">
+        <input type="text" id="edit-book-author" placeholder="Author">
+        <input type="number" id="edit-book-total-count" placeholder="Total Count">
+        <button onclick="editBook()">Edit</button>
+        <button onclick="hideForms()">Cancel</button>
+    </div>
+
+    <script>
+        // --- Storage helpers ---
+        function getUsers() { return JSON.parse(localStorage.getItem('users')) || []; }
+        function saveUsers(users) { localStorage.setItem('users', JSON.stringify(users)); }
+        function getBooks() { return JSON.parse(localStorage.getItem('books')) || []; }
+        function saveBooks(books) { localStorage.setItem('books', JSON.stringify(books)); }
+        function getLoggedInUser() { return JSON.parse(localStorage.getItem('loggedInUser')); }
+        function setLoggedInUser(user) { localStorage.setItem('loggedInUser', JSON.stringify(user)); }
+        function logout() { localStorage.removeItem('loggedInUser'); location.reload(); }
+
+        // --- Auth ---
+        function register() {
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value;
+            const role = document.getElementById('register-role').value;
+            if (!username || !password) return alert('Fill all fields!');
+            let users = getUsers();
+            if (users.some(u => u.username === username)) return alert('Username exists!');
+            users.push({ username, password, role, borrowedBooks: [] });
+            saveUsers(users);
+            alert('Registered! You can now login.');
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-password').value = '';
+        }
+
+        function login() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            let users = getUsers();
+            let user = users.find(u => u.username === username && u.password === password);
+            if (!user) return alert('Invalid credentials!');
+            setLoggedInUser(user);
+            location.reload();
+        }
+
+        // --- Book Management ---
+        function addBook() {
+            const title = document.getElementById('book-title').value.trim();
+            const author = document.getElementById('book-author').value.trim();
+            const totalCount = parseInt(document.getElementById('book-total-count').value, 10);
+            if (!title || !author || isNaN(totalCount) || totalCount < 1) return alert('Fill all fields correctly.');
+            let books = getBooks();
+            const newBook = {
+                id: books.length > 0 ? books[books.length - 1].id + 1 : 1,
+                title, author, totalCount, availableCount: totalCount
+            };
+            books.push(newBook);
+            saveBooks(books);
+            alert('Book added!');
+            hideForms();
+            showBooks();
+            document.getElementById('book-title').value = '';
+            document.getElementById('book-author').value = '';
+            document.getElementById('book-total-count').value = '';
+        }
+
+        function editBook() {
+            const id = parseInt(document.getElementById('edit-book-id').value, 10);
+            const title = document.getElementById('edit-book-title').value.trim();
+            const author = document.getElementById('edit-book-author').value.trim();
+            const totalCount = parseInt(document.getElementById('edit-book-total-count').value, 10);
+            if (isNaN(id) || !title || !author || isNaN(totalCount) || totalCount < 1) return alert('Fill all fields correctly.');
+            let books = getBooks();
+            let book = books.find(b => b.id === id);
+            if (!book) return alert('Book not found!');
+            const borrowed = book.totalCount - book.availableCount;
+            book.title = title;
+            book.author = author;
+            book.totalCount = totalCount;
+            book.availableCount = Math.max(0, totalCount - borrowed);
+            saveBooks(books);
+            alert('Book updated!');
+            hideForms();
+            showBooks();
+            document.getElementById('edit-book-id').value = '';
+            document.getElementById('edit-book-title').value = '';
+            document.getElementById('edit-book-author').value = '';
+            document.getElementById('edit-book-total-count').value = '';
+        }
+
+        function deleteBook() {
+            const id = parseInt(prompt('Enter book ID to delete:'), 10);
+            if (isNaN(id)) return alert('Invalid ID!');
+            let books = getBooks();
+            const index = books.findIndex(b => b.id === id);
+            if (index === -1) return alert('Book not found!');
+            books.splice(index, 1);
+            saveBooks(books);
+            alert('Book deleted!');
+            showBooks();
+        }
+
+        // --- Borrowing ---
+        function borrowBook(bookId) {
+            let books = getBooks();
+            let book = books.find(b => b.id === bookId);
+            if (!book || book.availableCount < 1) return alert('Not available!');
+            let users = getUsers();
+            let user = getLoggedInUser();
+            if (user.borrowedBooks.some(bb => bb.bookId === bookId)) return alert('Already borrowed!');
+            book.availableCount -= 1;
+            let now = new Date().toISOString().split('T')[0];
+            user.borrowedBooks.push({ bookId, dateBorrowed: now });
+            // Update user in users array
+            let idx = users.findIndex(u => u.username === user.username);
+            users[idx] = user;
+            saveBooks(books);
+            saveUsers(users);
+            setLoggedInUser(user);
+            alert('Book borrowed!');
+            showBooks();
+            showBorrowedBooks();
+        }
+
+        function showBorrowedBooks() {
+            let user = getLoggedInUser();
+            let books = getBooks();
+            let borrowedDiv = document.getElementById('user-borrowed-list');
+            borrowedDiv.innerHTML = '';
+            if (!user.borrowedBooks.length) {
+                borrowedDiv.innerHTML = '<p>No borrowed books.</p>';
+                return;
+            }
+            user.borrowedBooks.forEach(bb => {
+                let book = books.find(b => b.id === bb.bookId);
+                if (book) {
+                    borrowedDiv.innerHTML += `<div class="book">
+                        <strong>${book.title}</strong> by ${book.author}<br>
+                        Borrowed on: ${bb.dateBorrowed}
+                    </div>`;
+                }
+            });
+        }
+
+        // --- UI ---
+        function showBooks() {
+            let books = getBooks();
+            let user = getLoggedInUser();
+            if (!user) return;
+            if (user.role === 'librarian') {
+                let list = document.getElementById('librarian-book-list');
+                list.innerHTML = '';
+                if (!books.length) { list.innerHTML = '<p>No books.</p>'; return; }
+                books.forEach(book => {
+                    list.innerHTML += `<div class="book">
+                        <strong>ID:</strong> ${book.id}<br>
+                        <strong>Title:</strong> ${book.title}<br>
+                        <strong>Author:</strong> ${book.author}<br>
+                        <strong>Available:</strong> ${book.availableCount} / ${book.totalCount}
+                    </div>`;
+                });
+            } else {
+                let list = document.getElementById('user-book-list');
+                list.innerHTML = '';
+                if (!books.length) { list.innerHTML = '<p>No books.</p>'; return; }
+                books.forEach(book => {
+                    let disabled = book.availableCount < 1 ? 'disabled' : '';
+                    list.innerHTML += `<div class="book">
+                        <strong>${book.title}</strong> by ${book.author}<br>
+                        <strong>Available:</strong> ${book.availableCount} / ${book.totalCount}<br>
+                        <button onclick="borrowBook(${book.id})" ${disabled}>Borrow</button>
+                    </div>`;
+                });
+            }
+        }
+
+        function showAddBookForm() {
+            hideForms();
+            document.getElementById('add-book-form').classList.remove('hidden');
+        }
+        function showEditBookForm() {
+            hideForms();
+            document.getElementById('edit-book-form').classList.remove('hidden');
+        }
+        function hideForms() {
+            document.getElementById('add-book-form').classList.add('hidden');
+            document.getElementById('edit-book-form').classList.add('hidden');
+        }
+
+        // --- On Load ---
+        window.onload = () => {
+            let user = getLoggedInUser();
+            if (!user) {
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('user-dashboard').classList.add('hidden');
+                document.getElementById('librarian-dashboard').classList.add('hidden');
+            } else if (user.role === 'librarian') {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('librarian-dashboard').classList.remove('hidden');
+                document.getElementById('librarian-name').textContent = user.username;
+                showBooks();
+            } else {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('user-dashboard').classList.remove('hidden');
+                document.getElementById('user-name').textContent = user.username;
+                showBooks();
+                showBorrowedBooks();
+            }
+        };
+    </script>
+</body>
+</html>
