@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product CRUD App</title>
+    <link rel="stylesheet" href="crude.css">
+</head>
+<body>
+    <h1>Product CRUD App</h1>
+    <div id="product-form">
+        <h2>Add/Edit Product</h2>
+        <form id="product-form">
+            <input type="text" id="product-name" placeholder="Name" required>
+            <input type="number" id="product-price" placeholder="Price" required>
+            <input type="text" id="product-description" placeholder="Description" required>
+            <input type="number" id="product-rating" placeholder="Rating" min="1" max="5" required>
+            <input type="file" id="product-image" accept="image/*">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div id="product-list">
+        <h2>Products</h2>
+        <ul id="products"></ul>
+    </div>
+    <script src="crude.js"></script>
+</body>
+</html>
