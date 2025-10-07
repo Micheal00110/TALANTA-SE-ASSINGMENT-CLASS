@@ -1,22 +1,31 @@
-document.getElementById('image-input').addEventListener('change', handleImageUpload);
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image-input');
+    const previewBtn = document.getElementById('preview-btn');
+    
+    let selectedImages = [];
 
-function handleImageUpload(event) {
-    const files = event.target.files;
-    const previewContainer = document.getElementById('image-preview');
-    previewContainer.innerHTML = ''; // Clear previous previews
-
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (file.type.startsWith('image/')) {
+    imageInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        
+        files.forEach(file => {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const imgElement = document.createElement('img');
-                imgElement.src = e.target.result;
-                previewContainer.appendChild(imgElement);
+                selectedImages.push(e.target.result);
             };
             reader.readAsDataURL(file);
-        } else {
-            alert('Please select an image file.');
+        });
+    });
+
+    previewBtn.addEventListener('click', function() {
+        if (selectedImages.length === 0) {
+            alert('Please select images first!');
+            return;
         }
-    }
-}
+        
+        // Store images in localStorage
+        localStorage.setItem('previewImages', JSON.stringify(selectedImages));
+        
+        // Navigate to preview page
+        window.location.href = 'preview.html';
+    });
+});

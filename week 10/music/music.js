@@ -8,17 +8,27 @@ class Song {
 
 class MusicPlayer {
     constructor() {
+        // Convert absolute paths to relative paths
         this.songs = [
-            new Song("Song 1", "Artist 1", "song1.mp3"),
-            new Song("Song 2", "Artist 2", "song2.mp3"),
-            new Song("Song 3", "Artist 3", "song3.mp3")
+            new Song("Knick Knack", "9lokkNine", "./music/Knick Knack.mp3"),
+            new Song("No Relay", "9lokkNine x Soldier Kidd", "./music/No Relay.mp3"),
+            new Song("Why You LYING", "9lokknine", "./music/Why You LYING.mp3")  // Added new song
         ];
         this.playlist = [];
         this.currentSongIndex = 0;
         this.isLooping = false;
         this.isShuffling = false;
         this.audioPlayer = document.getElementById('audio-player');
+        
+        // Add error handling for audio element
+        if (!this.audioPlayer) {
+            console.error('Audio player element not found!');
+            return;
+        }
+
         this.audioPlayer.addEventListener('ended', () => this.handleSongEnded());
+        this.audioPlayer.addEventListener('error', (e) => this.handleError(e));
+        
         this.loadSongs();
         this.loadPlaylist();
         this.bindControlEvents();
@@ -29,8 +39,12 @@ class MusicPlayer {
         songsList.innerHTML = '';
         this.songs.forEach((song, index) => {
             const songElement = document.createElement('li');
-            songElement.textContent = `${song.title} by ${song.artist}`;
+            songElement.textContent = `${song.title} - ${song.artist}`;
             songElement.onclick = () => this.playSong(index);
+            songElement.classList.add('song-item');
+            if (index === this.currentSongIndex) {
+                songElement.classList.add('playing');
+            }
             songsList.appendChild(songElement);
         });
     }
@@ -48,12 +62,33 @@ class MusicPlayer {
 
     playSong(index) {
         if (index < 0 || index >= this.songs.length) return;
+        
         this.currentSongIndex = index;
         const song = this.songs[index];
-        this.audioPlayer.src = song.file;
-        this.audioPlayer.play();
-        document.getElementById('song-title').textContent = `${song.title} by ${song.artist}`;
-        this.showNotification(song.title, song.artist);
+
+        try {
+            // Direct audio source setting
+            this.audioPlayer.src = song.file;
+            
+            const playPromise = this.audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        document.getElementById('song-title').textContent = `${song.title} - ${song.artist}`;
+                        document.getElementById('play').textContent = 'Pause';
+                        this.showNotification(song.title, song.artist);
+                    })
+                    .catch(error => {
+                        console.error('Playback error:', error);
+                        alert('Error playing song. Please check if the file exists and has correct permissions.');
+                    });
+            }
+        } catch (error) {
+            console.error('Error setting up audio:', error);
+            alert('Error setting up audio player.');
+        }
+
+        this.loadSongs();
     }
 
     handleSongEnded() {
@@ -82,12 +117,33 @@ class MusicPlayer {
         }
     }
 
+    handleError(error) {
+        console.error('Audio error:', error);
+        const errorMessages = {
+            MEDIA_ERR_ABORTED: 'Playback aborted by user',
+            MEDIA_ERR_NETWORK: 'Network error while loading',
+            MEDIA_ERR_DECODE: 'Audio file is corrupted',
+            MEDIA_ERR_SRC_NOT_SUPPORTED: 'Audio format not supported'
+        };
+        
+        const errorMessage = errorMessages[error.target.error.code] || 'Unknown error occurred';
+        alert(`Audio Error: ${errorMessage}`);
+    }
+
     bindControlEvents() {
-        document.getElementById('play').addEventListener('click', () => {
+        const playButton = document.getElementById('play');
+        playButton.addEventListener('click', () => {
             if (this.audioPlayer.paused) {
-                this.audioPlayer.play();
+                this.audioPlayer.play()
+                    .then(() => {
+                        playButton.textContent = 'Pause';
+                    })
+                    .catch(error => {
+                        console.error('Play error:', error);
+                    });
             } else {
                 this.audioPlayer.pause();
+                playButton.textContent = 'Play';
             }
         });
 
@@ -113,9 +169,18 @@ class MusicPlayer {
     }
 }
 
-window.onload = () => {
+// Initialize player when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
     if (Notification.permission !== "granted") {
         Notification.requestPermission();
     }
-    new MusicPlayer();
-};
+    
+    const player = new MusicPlayer();
+    
+    // Don't autoplay initially - wait for user interaction
+    document.getElementById('play').addEventListener('click', () => {
+        if (player.audioPlayer.paused) {
+            player.playSong(0);
+        }
+    });
+});
