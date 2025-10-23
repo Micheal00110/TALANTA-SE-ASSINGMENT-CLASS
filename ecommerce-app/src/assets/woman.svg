@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="100%" height="100%" fill="#FFF7ED" />
+  <g fill="#C2410C">
+    <circle cx="200" cy="120" r="60" />
+    <rect x="120" y="200" width="160" height="140" rx="18" />
+  </g>
+  <text x="200" y="370" font-size="20" text-anchor="middle" fill="#1E293B">Woman</text>
+</svg>

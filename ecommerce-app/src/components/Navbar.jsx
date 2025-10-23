@@ -1,38 +1,72 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, User, Search } from "lucide-react";
+import { ShoppingCart, User, Search, Heart, ChevronDown } from "lucide-react";
+import Container from "./Container";
 
 export default function Navbar() {
   return (
-    <nav className="bg-yellow-500 p-3 flex items-center justify-between shadow-md">
-      {/* Logo */}
-      <Link to="/" className="text-2xl font-bold text-black">
-        MyShop
-      </Link>
-
-      {/* Search Bar */}
-      <div className="flex w-1/2">
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="w-full p-2 rounded-l-md border border-gray-300"
-        />
-        <button className="bg-black text-white px-3 rounded-r-md">
-          <Search size={18} />
-        </button>
+    <>
+      {/* Top Header Bar */}
+      <div className="bg-blue-600 text-white text-sm py-2">
+        <Container>
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4 text-xs">
+              <span>support@pressmart.com</span>
+              <span>+(123) 4567890</span>
+            </div>
+            <div className="flex items-center space-x-4 text-xs">
+              <span>Welcome to Our Store!</span>
+              <div className="flex items-center space-x-2">
+                <span>English</span>
+                <ChevronDown size={14} />
+              </div>
+              <div className="flex items-center space-x-2">
+                <span>$ Dollar (US)</span>
+                <ChevronDown size={14} />
+              </div>
+            </div>
+          </div>
+        </Container>
       </div>
 
-      {/* Icons */}
-      <div className="flex gap-4 items-center">
-        <Link to="/profile" className="flex items-center gap-1">
-          <User /> <span>Profile</span>
-        </Link>
-        <Link to="/cart" className="flex items-center gap-1">
-          <ShoppingCart /> <span>Cart</span>
-        </Link>
-        <Link to="/login" className="bg-black text-white px-4 py-1 rounded-md">
-          Login
-        </Link>
-      </div>
-    </nav>
+      {/* Main Header */}
+      <nav className="bg-white shadow-sm">
+        <Container>
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="text-2xl font-bold text-black">PressMart.</Link>
+
+            {/* Navigation Menu */}
+            <div className="hidden md:flex items-center space-x-8 text-sm">
+              <div className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
+                <Link to="/">Home</Link>
+                <ChevronDown size={14} />
+              </div>
+              <div className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
+                <Link to="/products">Shop</Link>
+                <ChevronDown size={14} />
+              </div>
+              <Link to="/about" className="text-gray-700 hover:text-blue-600 transition-colors">
+                About Us
+              </Link>
+              <div className="flex items-center space-x-1 text-gray-700 hover:text-blue-600">
+             <Link to="/blog">Blog</Link>
+                <ChevronDown size={14} />
+              </div>
+            </div>
+
+            {/* Right Icons */}
+            <div className="flex items-center space-x-4">
+           <span>KES Kenyan Shilling</span>
+              <button className="text-gray-700 hover:text-blue-600"><Search size={20} /></button>
+              <button className="text-gray-700 hover:text-blue-600"><Heart size={20} /></button>
+              <Link to="/cart" className="relative text-gray-700 hover:text-blue-600">
+                <ShoppingCart size={20} />
+                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </nav>
+    </>
   );
 }
